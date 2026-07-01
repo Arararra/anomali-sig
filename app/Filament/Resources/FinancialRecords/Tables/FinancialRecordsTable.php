@@ -22,7 +22,7 @@ class FinancialRecordsTable
                 TextColumn::make('date')
                     ->label('Date')
                     ->date(),
-                TextColumn::make('created_by')
+                TextColumn::make('creator.name')
                     ->label('Created By')
                     ->searchable()
                     ->sortable(),
