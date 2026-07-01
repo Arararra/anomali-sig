@@ -5,7 +5,10 @@ namespace App\Filament\Resources\FinancialRecords\Schemas;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Placeholder;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
 
 class FinancialRecordForm
 {
@@ -13,24 +16,36 @@ class FinancialRecordForm
     {
         return $schema
             ->components([
-                TextInput::make('amount')
-                    ->label('Amount')
-                    ->numeric()
-                    ->required()
-                    ->columnSpan('full'),
-                DatePicker::make('date')
-                    ->label('Date')
-                    ->required()
-                    ->columnSpan('full'),
-                TextInput::make('created_by')
-                    ->label('Created By')
-                    ->required()
-                    ->maxLength(255)
-                    ->columnSpan('full'),
-                Textarea::make('description')
-                    ->label('Description')
-                    ->rows(4)
-                    ->columnSpan('full'),
+                Grid::make(3)
+                    ->columnSpan('full')
+                    ->schema([
+                        Group::make([
+                            TextInput::make('amount')
+                                ->label('Amount')
+                                ->numeric()
+                                ->required(),
+                            DatePicker::make('date')
+                                ->label('Date')
+                                ->required(),
+                            Textarea::make('description')
+                                ->label('Description')
+                                ->columnSpan('full'),
+                        ])->columns(2)->columnSpan(2),
+
+                        Group::make([
+                            Placeholder::make('created_by')
+                                ->label('Created By')
+                                ->content(fn (?FinancialRecord $record): string => $record?->created_by ?? 'N/A'),
+
+                            Placeholder::make('created_at')
+                                ->label('Created At')
+                                ->content(fn (?FinancialRecord $record): string => $record?->created_at?->format('Y-m-d H:i:s') ?? 'N/A'),
+
+                            Placeholder::make('updated_at')
+                                ->label('Updated At')
+                                ->content(fn (?FinancialRecord $record): string => $record?->updated_at?->format('Y-m-d H:i:s') ?? 'N/A'),
+                        ])->columnSpan(1),
+                    ]),
             ]);
     }
 }
