@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\FinancialRecords\Schemas;
 
+use App\Models\FinancialRecord;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -33,18 +34,19 @@ class FinancialRecordForm
                         ])->columns(2)->columnSpan(2),
 
                         Group::make([
-                            Placeholder::make('created_by')
+                            Placeholder::make('created_by_placeholder')
                                 ->label('Created By')
-                                ->content(fn (?FinancialRecord $record): string => $record?->created_by ?? 'N/A'),
+                                ->content(fn (?FinancialRecord $record): string => $record?->creator?->name ?? 'N/A'),
 
-                            Placeholder::make('created_at')
+                            Placeholder::make('created_at_placeholder')
                                 ->label('Created At')
                                 ->content(fn (?FinancialRecord $record): string => $record?->created_at?->format('Y-m-d H:i:s') ?? 'N/A'),
 
-                            Placeholder::make('updated_at')
+                            Placeholder::make('updated_at_placeholder')
                                 ->label('Updated At')
                                 ->content(fn (?FinancialRecord $record): string => $record?->updated_at?->format('Y-m-d H:i:s') ?? 'N/A'),
-                        ])->columnSpan(1),
+                        ])->columnSpan(1)
+                          ->visible(fn (?FinancialRecord $record): bool => $record !== null),
                     ]),
             ]);
     }
